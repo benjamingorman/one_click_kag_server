@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+  kag:
+    restart: always
+    build:
+      context: . 
+      dockerfile: Dockerfile.kag
+    ports:
+      - "50301:50301/udp"
+      - "50301:50301/tcp"
+    volumes:
+      - ./autoconfig.cfg:/kag/autoconfig.cfg
+      - ./mods.cfg:/kag/mods.cfg:ro
+      - ./Mods:/kag/Mods:ro
+      - ./Security:/kag/Security:ro
+      - ./Logs:/kag/Logs

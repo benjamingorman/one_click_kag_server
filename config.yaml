@@ -1,0 +1,23 @@
+secrets:
+  digitalocean_key: YOUR_KEY_HERE
+droplet:
+  name: my-kag-server
+  region: ams3
+  image: ubuntu-21-04-x64
+  size_slug: s-1vcpu-1gb
+  backups: false
+kag:
+  autoconfig:
+    sv_name: My CTF Server
+    sv_info: An epic server owned by me.
+    sv_maxplayers: 10
+    sv_gamemode: CTF
+    sv_register: 1
+    sv_tcpr: 1
+    sv_password: ""
+    sv_rconpassword: YOUR_RCON_PASSWORD_HERE
+    security_seclevs: Security/seclevs.cfg
+  mods: []
+  security:
+    superadmins: []
+    admins: []

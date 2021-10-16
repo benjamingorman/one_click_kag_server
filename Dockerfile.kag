@@ -1,0 +1,22 @@
+FROM ubuntu:21.04
+
+ENV KAG_HOME /kag
+ENV KAG_URL http://dl.kag2d.com/kag-linux32-dedicated-release.tar.gz
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && \
+    apt-get install -y wget && \
+    wget "${KAG_URL}" -P /opt && \
+    mkdir ${KAG_HOME} && \
+    tar xzfv /opt/kag-linux32-dedicated-release.tar.gz -C ${KAG_HOME} && \
+    rm /opt/kag-linux32-dedicated-release.tar.gz && \
+    chmod +x ${KAG_HOME}/dedicatedserver.sh
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386
+
+WORKDIR ${KAG_HOME}
+
+ENTRYPOINT ["./dedicatedserver.sh"]
+
+EXPOSE 50301/udp

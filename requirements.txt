@@ -1,0 +1,8 @@
+PyYAML
+toml
+python-digitalocean
+cryptography
+fabric
+tenacity
+pysftp
+https://github.com/benjamingorman/kagtcprlib/archive/master.zip
