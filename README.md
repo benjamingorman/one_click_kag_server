@@ -78,6 +78,8 @@ This section describes how to create a server, assuming you have followed the se
 
 If you wish to have multiple config files with different names then you can pass the `--config-file` option to switch between them.
 
+Remember to destroy the droplet with `one_click_kag_server down` once you've finished with the server, since it will be costing you money as long as it's running.
+
 If you have any issues with the above then please report them to me on Discord (Eluded#1367).
 
 ## Commands
@@ -103,6 +105,10 @@ Run `python -m one_click_kag_server.main kag-logs` to view the KAG logs in real-
 #### ssh
 
 Run `python -m one_click_kag_server.main ssh` to open an SSH connection to the server. This requires SSH to be installed on your system.
+
+#### rcon
+
+Run `python -m one_click_kag_server.main rcon` to open a web based RCON client for remote administration of the KAG server.
 
 ## Important notes
 
