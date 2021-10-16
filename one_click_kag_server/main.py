@@ -196,6 +196,9 @@ def setup_kag(config: dict, state: State):
     ssh = open_ssh_connection(state)
     sftp = MySFTPClient.from_transport(ssh.get_transport())
 
+    logging.info("Uploading docker-compose.yaml...")
+    sftp.put("docker-compose.yaml", "docker-compose.yaml")
+
     # Upload mods
     logging.info("Uploading mods...")
     sftp.mkdir("Mods", ignore_existing=True)

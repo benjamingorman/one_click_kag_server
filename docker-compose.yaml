@@ -2,12 +2,10 @@ version: "3.3"
 services:
   kag:
     restart: always
+    network_mode: "host"  # use host networking to improve latency
     build:
       context: . 
       dockerfile: Dockerfile.kag
-    ports:
-      - "50301:50301/udp"
-      - "50301:50301/tcp"
     volumes:
       - ./autoconfig.cfg:/kag/autoconfig.cfg
       - ./mods.cfg:/kag/mods.cfg:ro
