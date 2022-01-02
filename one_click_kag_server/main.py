@@ -204,7 +204,7 @@ def setup_kag(config: dict, state: State):
     sftp.mkdir("Mods", ignore_existing=True)
     sftp.put_dir("Mods", "Mods")
 
-	# Upload cache
+    # Upload cache
     logging.info("Uploading cache...")
     sftp.mkdir("Cache", ignore_existing=True)
     sftp.put_dir("Cache", "Cache")
