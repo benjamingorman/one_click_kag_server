@@ -12,3 +12,4 @@ services:
       - ./Mods:/kag/Mods:ro
       - ./Security:/kag/Security:ro
       - ./Logs:/kag/Logs
+      - ./Cache:/kag/Cache

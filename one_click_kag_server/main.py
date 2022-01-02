@@ -204,6 +204,11 @@ def setup_kag(config: dict, state: State):
     sftp.mkdir("Mods", ignore_existing=True)
     sftp.put_dir("Mods", "Mods")
 
+	# Upload cache
+    logging.info("Uploading cache...")
+    sftp.mkdir("Cache", ignore_existing=True)
+    sftp.put_dir("Cache", "Cache")
+
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_dir = Path(tmp_dir)
 
@@ -290,7 +295,14 @@ def run_command_up(config: dict, state: State):
 
 
 def run_command_down(config: dict, state: State):
-    """Destroy the droplet."""
+    """Destroy the droplet & save cache."""
+
+    ssh = open_ssh_connection(state)
+    sftp = MySFTPClient.from_transport(ssh.get_transport())
+
+    logging.info("Saving cache")
+    sftp.get_recursive("Cache", "Cache")
+
     logging.info("Destroying droplet...")
     state.droplet.destroy()
 
