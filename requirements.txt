@@ -6,3 +6,4 @@ fabric
 tenacity
 pysftp
 kagtcprlib
+SimpleWebSocketServer

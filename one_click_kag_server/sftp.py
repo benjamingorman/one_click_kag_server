@@ -1,7 +1,7 @@
 import paramiko
 import logging
 import os
-
+from stat import S_ISDIR
 
 class MySFTPClient(paramiko.SFTPClient):
     def put_dir(self, source, target):
@@ -26,3 +26,15 @@ class MySFTPClient(paramiko.SFTPClient):
                 pass
             else:
                 raise
+    def get_recursive(self, path, dest):
+        ''' Download folder recursively '''
+        item_list = self.listdir_attr(path)
+        dest = str(dest)
+        if not os.path.isdir(dest):
+            os.makedirs(dest, exist_ok=True)
+        for item in item_list:
+            mode = item.st_mode
+            if S_ISDIR(mode):
+                self.get_recursive(path + "/" + item.filename, dest + "/" + item.filename)
+            else:
+                self.get(path + "/" + item.filename, dest + "/" + item.filename)

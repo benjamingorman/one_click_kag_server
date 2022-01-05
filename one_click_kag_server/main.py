@@ -186,7 +186,7 @@ def setup_droplet(config: dict, state: State):
     state.done_droplet_setup = True
 
 
-def setup_kag(config: dict, state: State):
+def setup_kag(config: dict, state: State, restart: bool=False):
     """
     Setup KAG, once the droplet has been properly configured.
     This can also be used to restart the KAG server.
@@ -203,6 +203,12 @@ def setup_kag(config: dict, state: State):
     logging.info("Uploading mods...")
     sftp.mkdir("Mods", ignore_existing=True)
     sftp.put_dir("Mods", "Mods")
+
+    # Upload cache unless we're restarting
+    if not restart and config["kag"]["cache"]:
+        logging.info("Uploading cache...")
+        sftp.mkdir("Cache", ignore_existing=True)
+        sftp.put_dir("Cache", "Cache")
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_dir = Path(tmp_dir)
@@ -290,7 +296,15 @@ def run_command_up(config: dict, state: State):
 
 
 def run_command_down(config: dict, state: State):
-    """Destroy the droplet."""
+    """Destroy the droplet & save cache."""
+
+    ssh = open_ssh_connection(state)
+    sftp = MySFTPClient.from_transport(ssh.get_transport())
+
+    if config["kag"]["cache"]:
+        logging.info("Saving cache")
+        sftp.get_recursive("Cache", "Cache")
+
     logging.info("Destroying droplet...")
     state.droplet.destroy()
 
@@ -349,7 +363,7 @@ def main():
             state = State()
             logging.info("DONE. Droplet destroyed.")
         elif args.command == "restart-kag":
-            setup_kag(config, state)
+            setup_kag(config, state, True)
             logging.info("DONE. Restarted KAG.")
         elif args.command == "kag-logs":
             follow_kag_logs(state)

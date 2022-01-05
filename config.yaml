@@ -18,6 +18,7 @@ kag:
     sv_rconpassword: YOUR_RCON_PASSWORD_HERE
     security_seclevs: Security/seclevs.cfg
   mods: []
+  cache: false
   security:
     superadmins: []
     admins: []
