@@ -14,7 +14,7 @@ import sys
 import digitalocean
 import kagtcprlib.webinterface
 import paramiko
-from tenacity import retry, wait, wait_fixed, stop_after_delay
+from tenacity import after_log, retry, wait, wait_fixed, stop_after_delay, stop_after_attempt
 import tempfile
 import toml
 import yaml
@@ -169,10 +169,12 @@ def setup_droplet(config: dict, state: State):
         sftp.put(path, path.name)
 
     # Run the setup script
+    logging.info("Making the setup script executable...")
     (_, stdout, _) = ssh.exec_command("chmod +x droplet_setup.sh")
     stdout.channel.recv_exit_status()
 
-    (_, stdout, _) = ssh.exec_command("./droplet_setup.sh 2>&1")
+    logging.info("Running the setup script...")
+    (_, stdout, _) = ssh.exec_command("bash -ex droplet_setup.sh 2>&1")
     for line in stdout:
         print(line.rstrip())
     status = stdout.channel.recv_exit_status()
@@ -270,8 +272,13 @@ def follow_kag_logs(state: State):
         print(line.rstrip())
 
 
+@retry(wait=wait_fixed(5), stop=stop_after_attempt(3), after=after_log(logging.getLogger(), logging.INFO))
 def run_command_up(config: dict, state: State):
-    """Create the droplet, configure it to run KAG and start the KAG server."""
+    """
+    Create the droplet, configure it to run KAG and start the KAG server.
+    There are often issues with this that are solved simply by waiting a few seconds for
+    something in DigitalOcean to progress, and then trying again. So retry 3 times.
+    """
     if not state.ssh_key_uploaded:
         configure_ssh_key(config, state)
 

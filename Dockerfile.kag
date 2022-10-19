@@ -4,7 +4,10 @@ ENV KAG_HOME /kag
 ENV KAG_URL http://dl.kag2d.com/kag-linux32-dedicated-release.tar.gz
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list
+
 RUN apt-get update && \
+    apt-get dist-upgrade && \
     apt-get install -y wget && \
     wget "${KAG_URL}" -P /opt && \
     mkdir ${KAG_HOME} && \

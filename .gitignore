@@ -1,4 +1,5 @@
-Mods/
+Mods/*
+!Mods/.gitkeep
 ssh_keys/
 secrets/
 state.pkl
